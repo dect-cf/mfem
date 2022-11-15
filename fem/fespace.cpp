@@ -2788,17 +2788,36 @@ FiniteElementSpace::GetElementDofs(int elem, Array<int> &dofs) const
 
 void FiniteElementSpace::GetPatchDofs(int patch, Array<int> &dofs) const
 {
-   const int nx = NURBSext->ndof1D(patch,0);
-   const int ny = NURBSext->ndof1D(patch,1);
-   const int nz = NURBSext->ndof1D(patch,2);
-   dofs.SetSize(nx * ny * nz);
+	if(NURBSext->Dimension()==1)
+	{
+         MFEM_ABORT("One-dimensional NURBS spaces are not supported.");
+	}
+	else if(NURBSext->Dimension()==2)
+	{
+		const int nx = NURBSext->ndof1D(patch,0);
+		const int ny = NURBSext->ndof1D(patch,1);
+		dofs.SetSize(nx * ny);
 
-   for (int k=0; k<nz; ++k)
-      for (int j=0; j<ny; ++j)
-         for (int i=0; i<nx; ++i)
-         {
-            dofs[i + (nx * (j + (k * ny)))] = NURBSext->patchDofs[patch](i,j,k);
-         }
+		for (int j=0; j<ny; ++j)
+			for (int i=0; i<nx; ++i)
+			{
+				dofs[i + (nx * (j))] = NURBSext->patchDofs2d[patch](i,j);
+			}
+	}
+	else if(NURBSext->Dimension()==3)
+	{
+		const int nx = NURBSext->ndof1D(patch,0);
+		const int ny = NURBSext->ndof1D(patch,1);
+		const int nz = NURBSext->ndof1D(patch,2);
+		dofs.SetSize(nx * ny * nz);
+
+		for (int k=0; k<nz; ++k)
+			for (int j=0; j<ny; ++j)
+				for (int i=0; i<nx; ++i)
+				{
+					dofs[i + (nx * (j + (k * ny)))] = NURBSext->patchDofs3d[patch](i,j,k);
+				}
+	}
 }
 
 const FiniteElement *FiniteElementSpace::GetFE(int i) const

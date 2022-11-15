@@ -276,6 +276,7 @@ protected:
    void GenerateElementDofTable();
 
    void GeneratePatchDofTable();
+   void Generate2DPatchDofTable();
    void Generate3DPatchDofTable();
 
    // generate elem_to_global-dof table for the active elements
@@ -424,7 +425,8 @@ public:
 
    // TODO: make this private and add access functions
    Array2D<int> ndof1D;
-   std::vector<Array3D<int>> patchDofs;
+   std::vector<Array2D<int>> patchDofs2d;
+   std::vector<Array3D<int>> patchDofs3d;
    std::vector<std::vector<std::set<int>>> patch_ijk;
 };
 
