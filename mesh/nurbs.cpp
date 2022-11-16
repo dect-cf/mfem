@@ -3680,6 +3680,7 @@ ParNURBSExtension::ParNURBSExtension(MPI_Comm comm, NURBSExtension *parent,
    SetActive(partitioning, active_bel);
 
    GenerateActiveVertices();
+   GeneratePatchDofTable();
    GenerateElementDofTable();
    // GenerateActiveBdrElems(); // done by SetActive for now
    GenerateBdrElementDofTable();
